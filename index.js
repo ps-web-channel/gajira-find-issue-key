@@ -13,13 +13,13 @@ const config = YAML.parse(fs.readFileSync(configPath, 'utf8'));
 async function exec() {
 	try {
 		const argv = parseArgs();
+		console.log(`argv`, argv);
+		console.log(`event`, githubEvent);
 		const result = await new Action({
 			githubEvent,
 			argv,
 			config,
 		}).execute();
-		console.log(`argv`, argv);
-		console.log(`event`, githubEvent);
 		if (result) {
 			console.log(`Detected issueKey: ${result.issue}`);
 			console.log(`Saving ${result.issue} to ${cliConfigPath}`);
