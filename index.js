@@ -14,7 +14,7 @@ async function exec() {
 	try {
 		const argv = parseArgs();
 		console.log(`argv`, argv);
-		console.log(`event`, githubEvent);
+		console.log(`event`, JSON.stringify(githubEvent, 2, null));
 		const result = await new Action({
 			githubEvent,
 			argv,
