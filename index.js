@@ -29,9 +29,12 @@ async function exec() {
 			owner: repoOwner,
 			repo: repoName,
 			pull_number: prNumber,
+			mediaType: {
+				format: 'diff',
+			},
 		});
 
-		console.log(`event`, JSON.stringify(pullRequest, null, 2));
+		console.log(`pullRequest`, JSON.stringify(pullRequest, null, 2));
 		const result = await new Action({
 			githubEvent,
 			argv,
