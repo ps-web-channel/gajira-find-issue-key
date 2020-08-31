@@ -32,14 +32,14 @@ async function exec() {
 				message,
 			}))
 			.filter(({ email, message }) => {
+				console.log('---------------------------');
 				console.log('subject', email, message);
 				console.log(
 					'test',
-					allowMap[email],
-					allowedCommits.test(message)
+					!allowMap[email] && !allowedCommits.test(message)
 				);
 
-				return !allowMap[email] || !allowedCommits.test(message);
+				return !allowMap[email] && !allowedCommits.test(message);
 			});
 		console.log(`allowMap`, JSON.stringify(allowMap));
 		console.log(`commits`, JSON.stringify(treatedCommits, null, 2));
