@@ -31,7 +31,7 @@ module.exports = class {
 			return;
 		}
 		const issues = matches.flat(Infinity);
-
+		console.log('issues', issues);
 		for (const issueKey of issues) {
 			const issue = await this.Jira.getIssue(issueKey);
 			if (!issue) {
