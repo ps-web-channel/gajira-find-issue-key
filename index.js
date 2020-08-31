@@ -18,10 +18,9 @@ async function exec() {
 		const argv = parseArgs();
 		const { repoToken, allowList } = argv;
 		const octokit = github.getOctokit(repoToken);
-		const allowMap = allowList.reduce(
-			(obj, key) => ({ [key]: true, ...obj }),
-			{}
-		);
+		const allowMap = allowList
+			.split(',')
+			.reduce((obj, key) => ({ [key]: true, ...obj }), {});
 
 		const {
 			pull_request: { commits_url },
@@ -69,7 +68,7 @@ function parseArgs() {
 		string: core.getInput('string') || config.string,
 		from: core.getInput('from'),
 		repoToken: core.getInput('repo-token'),
-		allowList: core.getInput('allowlist') || [],
+		allowList: core.getInput('allowlist') || '',
 	};
 }
 
