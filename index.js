@@ -28,8 +28,12 @@ async function exec() {
 		const { data: commits } = await octokit.request(commits_url);
 		const treatedCommits = commits
 			.filter(
-				({ commit: { email, message } }) =>
-					!allowMap[email] && !allowedCommits.test(message)
+				({
+					commit: {
+						author: { email },
+						message,
+					},
+				}) => !allowMap[email] && !allowedCommits.test(message)
 			)
 			.map(({ commit }) => commit);
 		console.log(`allowList`, allowList.split(','));
