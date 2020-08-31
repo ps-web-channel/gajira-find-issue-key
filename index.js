@@ -14,7 +14,7 @@ async function exec() {
 	try {
 		const argv = parseArgs();
 		console.log(`argv`, argv);
-		console.log(`event`, JSON.stringify(githubEvent, 2, null));
+		console.log(`event`, JSON.stringify(githubEvent, null, 2));
 		const result = await new Action({
 			githubEvent,
 			argv,
@@ -37,6 +37,7 @@ async function exec() {
 		}
 
 		console.log('No issueKeys found.');
+		core.setFailed('No issueKeys found.');
 	} catch (error) {
 		core.setFailed(error.toString());
 	}
