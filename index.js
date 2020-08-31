@@ -31,18 +31,11 @@ async function exec() {
 				email,
 				message,
 			}))
-			.filter(({ email, message }) => {
-				console.log('---------------------------');
-				console.log('subject', email, message);
-				console.log(
-					'test',
+			.filter(
+				({ email, message }) =>
 					!allowMap[email] && !allowedCommits.test(message)
-				);
+			);
 
-				return !allowMap[email] && !allowedCommits.test(message);
-			});
-		console.log(`allowMap`, JSON.stringify(allowMap));
-		console.log(`commits`, JSON.stringify(treatedCommits, null, 2));
 		const result = await new Action({
 			githubEvent: { commits: treatedCommits },
 			argv,
