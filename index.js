@@ -29,10 +29,10 @@ async function exec() {
 		const treatedCommits = commits
 			.filter(
 				({ commit: { email, message } }) =>
-					!allowMap[email] || allowedCommits.test(message)
+					!allowMap[email] && !allowedCommits.test(message)
 			)
 			.map(({ commit }) => commit);
-
+		console.log(`allowList`, allowList.split(','));
 		console.log(`commits`, JSON.stringify(treatedCommits, null, 2));
 		const result = await new Action({
 			githubEvent: { commits: treatedCommits },
