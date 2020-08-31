@@ -11,6 +11,8 @@ const githubEvent = require(process.env.GITHUB_EVENT_PATH);
 const config = YAML.parse(fs.readFileSync(configPath, 'utf8'));
 const github = require('@actions/github');
 
+const allowedCommits = /^Merge branch/;
+
 async function exec() {
 	try {
 		const argv = parseArgs();
@@ -26,7 +28,10 @@ async function exec() {
 		} = githubEvent;
 		const { data: commits } = await octokit.request(commits_url);
 		const treatedCommits = commits
-			.filter(({ commit: { email } }) => !allowMap[email])
+			.filter(
+				({ commit: { email, message } }) =>
+					!allowMap[email] || allowedCommits.test(message)
+			)
 			.map(({ commit }) => commit);
 
 		console.log(`commits`, JSON.stringify(commits, null, 2));
