@@ -27,6 +27,10 @@ async function exec() {
 		} = githubEvent;
 		const { data: commits } = await octokit.request(commits_url);
 		const treatedCommits = commits
+			.map(({ commit: { author: { email }, message } }) => ({
+				email,
+				message,
+			}))
 			.filter(
 				({
 					commit: {
@@ -34,8 +38,7 @@ async function exec() {
 						message,
 					},
 				}) => !allowMap[email] || !allowedCommits.test(message)
-			)
-			.map(({ commit }) => commit);
+			);
 		console.log(`allowMap`, JSON.stringify(allowMap));
 		console.log(`commits`, JSON.stringify(treatedCommits, null, 2));
 		const result = await new Action({
