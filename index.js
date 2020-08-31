@@ -18,23 +18,11 @@ async function exec() {
 
 		const argv = parseArgs();
 		const {
-			repository: {
-				owner: { login: repoOwner },
-				name: repoName,
-			},
-			pull_request: { number: prNumber },
+			pull_request: { commits_url },
 		} = githubEvent;
+		const { data: commits } = await octokit.request(commits_url);
 
-		const { data: pullRequest } = await octokit.pulls.get({
-			owner: repoOwner,
-			repo: repoName,
-			pull_number: prNumber,
-			mediaType: {
-				format: 'diff',
-			},
-		});
-
-		console.log(`pullRequest`, JSON.stringify(pullRequest, null, 2));
+		console.log(`commits`, JSON.stringify(commits, null, 2));
 		const result = await new Action({
 			githubEvent,
 			argv,
