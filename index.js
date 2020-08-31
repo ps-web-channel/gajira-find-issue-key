@@ -29,12 +29,12 @@ async function exec() {
 			config,
 		}).execute();
 		if (result) {
-			console.log(`Detected issueKey: ${result.issue}`);
-			console.log(`Saving ${result.issue} to ${cliConfigPath}`);
-			console.log(`Saving ${result.issue} to ${configPath}`);
+			console.log(`Detected issues: ${JSON.stringify(result, null, 2)}`);
+			// console.log(`Saving ${result.issue} to ${cliConfigPath}`);
+			// console.log(`Saving ${result.issue} to ${configPath}`);
 
 			// Expose created issue's key as an output
-			core.setOutput('issue', result.issue);
+			core.setOutput('issues', result);
 
 			const yamledResult = YAML.stringify(result);
 			const extendedConfig = Object.assign({}, config, result);
