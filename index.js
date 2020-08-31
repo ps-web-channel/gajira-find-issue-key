@@ -33,7 +33,7 @@ async function exec() {
 			)
 			.map(({ commit }) => commit);
 
-		console.log(`commits`, JSON.stringify(commits, null, 2));
+		console.log(`commits`, JSON.stringify(treatedCommits, null, 2));
 		const result = await new Action({
 			githubEvent: { commits: treatedCommits },
 			argv,
