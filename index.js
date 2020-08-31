@@ -24,7 +24,7 @@ async function exec() {
 
 		console.log(`commits`, JSON.stringify(commits, null, 2));
 		const result = await new Action({
-			githubEvent,
+			githubEvent: { commits: commits.map(({ commit }) => commit) },
 			argv,
 			config,
 		}).execute();
