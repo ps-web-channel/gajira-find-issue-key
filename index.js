@@ -36,7 +36,7 @@ async function exec() {
 				}) => !allowMap[email] || !allowedCommits.test(message)
 			)
 			.map(({ commit }) => commit);
-		console.log(`allowList`, JSON.stringify(allowMap));
+		console.log(`allowMap`, JSON.stringify(allowMap));
 		console.log(`commits`, JSON.stringify(treatedCommits, null, 2));
 		const result = await new Action({
 			githubEvent: { commits: treatedCommits },
