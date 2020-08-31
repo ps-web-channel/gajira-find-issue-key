@@ -44,8 +44,8 @@ async function exec() {
 			return fs.appendFileSync(cliConfigPath, yamledResult);
 		}
 
-		console.log('No issueKeys found.');
-		core.setFailed('No issueKeys found.');
+		console.log('Could no find an issue key on all commits.');
+		core.setFailed('Could no find an issue key on all commits.');
 	} catch (error) {
 		core.setFailed(error.toString());
 	}
