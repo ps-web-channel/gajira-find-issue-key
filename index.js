@@ -13,18 +13,25 @@ const github = require('@actions/github');
 
 async function exec() {
 	try {
-		const repoToken = core.getInput('repo-token');
-		const octokit = github.getOctokit(repoToken);
-
 		const argv = parseArgs();
+		const { repoToken, allowList } = argv;
+		const octokit = github.getOctokit(repoToken);
+		const allowMap = allowList.reduce(
+			(obj, key) => ({ [key]: true, ...obj }),
+			{}
+		);
+
 		const {
 			pull_request: { commits_url },
 		} = githubEvent;
 		const { data: commits } = await octokit.request(commits_url);
+		const treatedCommits = commits
+			.filter(({ commit: { email } }) => !allowMap[email])
+			.map(({ commit }) => commit);
 
 		console.log(`commits`, JSON.stringify(commits, null, 2));
 		const result = await new Action({
-			githubEvent: { commits: commits.map(({ commit }) => commit) },
+			githubEvent: { commits: treatedCommits },
 			argv,
 			config,
 		}).execute();
@@ -56,6 +63,8 @@ function parseArgs() {
 		event: core.getInput('event') || config.event,
 		string: core.getInput('string') || config.string,
 		from: core.getInput('from'),
+		repoToken: core.getInput('repo-token'),
+		allowList: core.getInput('allowlist') || [],
 	};
 }
 

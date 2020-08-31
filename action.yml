@@ -14,6 +14,9 @@ inputs:
         description: Find from predefined place (should be either 'branch', or 'commits', default is 'commits')
         required: false
         default: commits
+    allowlist:
+        description: The emails of the users that this check should not be valid
+        required: false
     repo-token:
         description: Provide the token for the current repository
         required: false
