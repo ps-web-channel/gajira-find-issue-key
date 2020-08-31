@@ -32,12 +32,8 @@ async function exec() {
 				message,
 			}))
 			.filter(
-				({
-					commit: {
-						author: { email },
-						message,
-					},
-				}) => !allowMap[email] || !allowedCommits.test(message)
+				({ email, message }) =>
+					!allowMap[email] || !allowedCommits.test(message)
 			);
 		console.log(`allowMap`, JSON.stringify(allowMap));
 		console.log(`commits`, JSON.stringify(treatedCommits, null, 2));
