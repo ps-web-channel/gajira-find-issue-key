@@ -9,12 +9,29 @@ const Action = require('./action');
 // eslint-disable-next-line import/no-dynamic-require
 const githubEvent = require(process.env.GITHUB_EVENT_PATH);
 const config = YAML.parse(fs.readFileSync(configPath, 'utf8'));
+const github = require('@actions/github');
 
 async function exec() {
 	try {
+		const repoToken = core.getInput('repo-token');
+		const octokit = github.getOctokit(repoToken);
+
 		const argv = parseArgs();
-		console.log(`argv`, argv);
-		console.log(`event`, JSON.stringify(githubEvent, null, 2));
+		const {
+			repository: {
+				owner: { login: repoOwner },
+				name: repoName,
+			},
+			pull_request: { number: prNumber },
+		} = githubEvent;
+
+		const { data: pullRequest } = await octokit.pulls.get({
+			owner: repoOwner,
+			repo: repoName,
+			pull_number: prNumber,
+		});
+
+		console.log(`event`, JSON.stringify(pullRequest, null, 2));
 		const result = await new Action({
 			githubEvent,
 			argv,
