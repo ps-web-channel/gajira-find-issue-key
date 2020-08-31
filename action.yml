@@ -16,8 +16,8 @@ inputs:
         default: commits
     repo-token:
         description: Provide the token for the current repository
-        required: true
-    outputs:
+        required: false
+outputs:
     issue:
         description: Key of the found issue
 runs:
