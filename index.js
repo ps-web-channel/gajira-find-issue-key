@@ -1,6 +1,7 @@
 const fs = require('fs');
 const YAML = require('yaml');
 const core = require('@actions/core');
+const github = require('@actions/github');
 
 const cliConfigPath = `${process.env.HOME}/.jira.d/config.yml`;
 const configPath = `${process.env.HOME}/jira/config.yml`;
@@ -9,9 +10,18 @@ const Action = require('./action');
 // eslint-disable-next-line import/no-dynamic-require
 const githubEvent = require(process.env.GITHUB_EVENT_PATH);
 const config = YAML.parse(fs.readFileSync(configPath, 'utf8'));
-const github = require('@actions/github');
 
 const allowedCommits = /^Merge branch/;
+
+function parseArgs() {
+	return {
+		event: core.getInput('event') || config.event,
+		string: core.getInput('string') || config.string,
+		from: core.getInput('from'),
+		repoToken: core.getInput('repo-token'),
+		allowList: core.getInput('allowlist') || '',
+	};
+}
 
 async function exec() {
 	try {
@@ -41,10 +51,9 @@ async function exec() {
 			argv,
 			config,
 		}).execute();
+
 		if (result) {
 			console.log(`Detected issues: ${JSON.stringify(result, null, 2)}`);
-			// console.log(`Saving ${result.issue} to ${cliConfigPath}`);
-			// console.log(`Saving ${result.issue} to ${configPath}`);
 
 			// Expose created issue's key as an output
 			core.setOutput('issues', result);
@@ -62,16 +71,6 @@ async function exec() {
 	} catch (error) {
 		core.setFailed(error.toString());
 	}
-}
-
-function parseArgs() {
-	return {
-		event: core.getInput('event') || config.event,
-		string: core.getInput('string') || config.string,
-		from: core.getInput('from'),
-		repoToken: core.getInput('repo-token'),
-		allowList: core.getInput('allowlist') || '',
-	};
 }
 
 exec();
